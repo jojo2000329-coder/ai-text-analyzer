@@ -106,3 +106,42 @@ for std_name, aliases in FOOD_ALIASES.items():
     for alias in aliases:
         ALIAS_TO_FOOD[alias] = std_name
         ALIAS_TO_FOOD[alias.lower()] = std_name
+
+# Extra foods (added for common queries)
+EXTRA_FOODS = {
+    "冰淇淋": {"cal":207,"fiber":0,"benefits":["解暑","愉悦心情"],"tags":["冷饮","高糖"]},
+    "巧克力": {"cal":546,"fiber":3.4,"benefits":["改善情绪","抗氧化"],"tags":["甜食"]},
+    "奶茶": {"cal":350,"fiber":0,"benefits":["享受"],"tags":["饮品"]},
+    "可乐": {"cal":42,"fiber":0,"benefits":["解渴"],"tags":["饮料"]},
+    "咖啡": {"cal":1,"fiber":0,"benefits":["提神醒脑"],"tags":["饮品"]},
+    "茶": {"cal":1,"fiber":0,"benefits":["提神","抗氧化"],"tags":["饮品"]},
+    "饭": {"cal":116,"fiber":0.3,"benefits":["补充能量"],"tags":["主食"]},
+    "面条": {"cal":138,"fiber":0.4,"benefits":["补充能量"],"tags":["主食"]},
+    "饥子": {"cal":240,"fiber":1.2,"benefits":["营养均衡"],"tags":["主食"]},
+    "火锅": {"cal":150,"fiber":0.5,"benefits":["聚餐"],"tags":["中餐"]},
+    "汉堡": {"cal":295,"fiber":1.2,"benefits":["快捷"],"tags":["快餐"]},
+    "蜂蜜": {"cal":304,"fiber":0,"benefits":["润喉","通便"],"tags":["调味"]},
+    "啤酒": {"cal":43,"fiber":0,"benefits":["社交"],"tags":["酒类"]},
+}
+DAILY_ADVICE = {
+    "冰淇淋":"不建议每天吃。高糖高脂，偶尔解馋就好。",
+    "巧克力":"可以每天1-2小块，热量高减脂期少吃。",
+    "奶茶":"不建议每天喝。糖分热量高。",
+    "可乐":"不建议每天喝。含糖高伤牙齿。",
+    "咖啡":"可以每天1-2杯不加糖。适量有益。",
+    "茶":"可以每天喝。茶多酚抗氧化。",
+    "饭":"可以每天吃，一碗合适。",
+    "面条":"可以每天吃，好消化。",
+    "饥子":"适量吃。营养好。",
+    "火锅":"每周最多1次。少油少盐。",
+    "汉堡":"偶尔吃，热量高。",
+    "蜂蜜":"每天1-2勺，糖尿病人慎食。",
+    "啤酒":"少喝，含酒精伤肝。",
+}
+ALL_FOODS.update(EXTRA_FOODS)
+for name in EXTRA_FOODS:
+    if name not in FOOD_ALIASES:
+        FOOD_ALIASES[name] = [name]
+        ALIAS_TO_FOOD[name] = name
+    if name not in DAILY_ADVICE:
+        DAILY_ADVICE[name] = ""
