@@ -159,3 +159,26 @@ DAILY_ADVICE = {
     "糙米": "✅ 可以每天吃，代替白米饭更健康。高纤维控制血糖。",
     "全麦面包": "✅ 可以每天适量吃。高纤维饱腹感强，注意选真正的全麦。",
 }
+# 额外常见食物
+EXTRA_FOODS = {
+    "冰淇淋": {"cal":207,"fiber":0,"benefits":["解暑","愉悦心情"],"tags":["冷饮","高糖"],"daily":"不建议每天吃。高糖高脂，偶尔解馋就好。"},
+    "巧克力": {"cal":546,"fiber":3.4,"benefits":["改善情绪","抗氧化"],"tags":["甜食"],"daily":"适量每天1-2小块。热量高，减脂期少吃。"},
+    "蛋糕": {"cal":347,"fiber":0.3,"benefits":["享受"],"tags":["甜食"],"daily":"不建议每天吃。高糖高脂，偶尔生日吃。"},
+    "奶茶": {"cal":350,"fiber":0,"benefits":["享受"],"tags":["饮品"],"daily":"不建议每天喝。一杯奶茶热量顶一顿饭。"},
+    "可乐": {"cal":42,"fiber":0,"benefits":["解渴"],"tags":["饮料"],"daily":"不建议每天喝。含糖高，伤牙齿。"},
+    "咖啡": {"cal":1,"fiber":0,"benefits":["提神醒脑"],"tags":["饮品"],"daily":"可以每天1-2杯不加糖。适量有益。"},
+    "茶": {"cal":1,"fiber":0,"benefits":["提神","抗氧化"],"tags":["饮品"],"daily":"可以每天喝。茶多酚抗氧化好。"},
+    "啤酒": {"cal":43,"fiber":0,"benefits":["社交"],"tags":["酒类"],"daily":"少喝，含酒精伤肝。"},
+    "米饭": {"cal":116,"fiber":0.3,"benefits":["补充能量"],"tags":["主食"],"daily":"可以每天吃，一碗合适。"},
+    "面条": {"cal":138,"fiber":0.4,"benefits":["补充能量"],"tags":["主食"],"daily":"可以每天吃，好消化。"},
+    "饺子": {"cal":240,"fiber":1.2,"benefits":["营养均衡"],"tags":["主食"],"daily":"适量吃，营养好。"},
+    "火锅": {"cal":150,"fiber":0.5,"benefits":["聚餐"],"tags":["中餐"],"daily":"每周最多1次，少油少盐。"},
+    "汉堡": {"cal":295,"fiber":1.2,"benefits":["快捷"],"tags":["快餐"],"daily":"偶尔吃，热量高脂肪高。"},
+    "蜂蜜": {"cal":304,"fiber":0,"benefits":["润喉","通便"],"tags":["调味"],"daily":"每天1-2勺，糖尿病人慎食。"},
+}
+ALL_FOODS.update(EXTRA_FOODS)
+for name, data in EXTRA_FOODS.items():
+    DAILY_ADVICE[name] = data.get('daily', '')
+    if name not in FOOD_ALIASES:
+        FOOD_ALIASES[name] = [name]
+        ALIAS_TO_FOOD[name] = name
