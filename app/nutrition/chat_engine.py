@@ -139,7 +139,7 @@ def chat(query):
         return handle_general_help()
     food_match = re.search(r'[（(]?([\u4e00-\u9fff]{2,4})[）)]?(?:的|有|含|作用|功效|营养|好处|价值)', text)
     if not food_match:
-        food_match = re.search(r'([\u4e00-\u9fff]{2,4})(?:的益处|的好处|作用|功效|营养|热量|卡路里)', text)
+        food_match = re.search(r'([\u4e00-\u9fff]{2,4})(?:的益处|的好处|作用|功效|营养|热量|卡路里|价值)', text)
     if not food_match:
         food_match = re.search(r'^(?:请问|我想问|告诉我|推荐)?([\u4e00-\u9fff]{2,4})[，,、]', text)
     if not food_match:
