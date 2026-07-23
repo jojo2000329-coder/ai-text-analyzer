@@ -180,13 +180,15 @@ def chat(query):
             if result:
                 return result
     # 检查食物名称（直接出现在问题中）
-    for word_len in [4, 3, 2]:
-        for i in range(len(text) - word_len + 1):
-            candidate = text[i:i+word_len]
-            if find_food(candidate):
-                result = handle_food_query(text, candidate)
-                if result:
-                    return result
+    for wl in [4,3,2]:
+        for i in range(len(text)-wl+1):
+            c = text[i:i+wl]
+            if c in ALL_FOODS or c in ALIAS_TO_FOOD:
+                if c in ALIAS_TO_FOOD:
+                    c = ALIAS_TO_FOOD[c]
+                r = handle_food_query(text, c)
+                if r:
+                    return r
     # 检查营养素
     nk = get_nutrient_key(text)
     if nk:
