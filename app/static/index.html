@@ -1,111 +1,131 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AI 智文助手</title>
+<title>AI 智文助手 - 智能文本分析</title>
 <style>
+:root{--primary:#2563eb;--bg:#f0f4f8;--card:#fff;--text:#1e293b;--text2:#64748b;--border:#e2e8f0;--radius:12px}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;background:#f8fafc;color:#1e293b}
-.header{background:#fff;border-bottom:1px solid #e2e8f0;padding:16px 24px}
-.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px}
-.header h1{font-size:20px;font-weight:600;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.container{max-width:960px;margin:0 auto;padding:24px 16px}
-.input-section{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:24px;margin-bottom:24px}
-textarea{width:100%;min-height:140px;padding:16px;font-size:15px;line-height:1.6;border:2px solid #e2e8f0;border-radius:10px;resize:vertical;outline:none;font-family:inherit}
-textarea:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
-.controls{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
-.mode-btn{padding:7px 16px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;color:#64748b;font-weight:500}
-.mode-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}
-.submit-btn{padding:8px 28px;border-radius:8px;border:none;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-left:auto}
-.submit-btn:disabled{opacity:0.5}
-.loading{display:none;align-items:center;gap:8px;color:#64748b;margin-top:12px}
-.loading.active{display:flex}
-.spinner{width:16px;height:16px;border:2px solid #e2e8f0;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.result-section{display:none}
-.result-section.active{display:block}
-.result-grid{display:grid;gap:16px;grid-template-columns:1fr 1fr}
-@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
-.result-card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:20px;border:1px solid #e2e8f0}
-.result-card.full{grid-column:1/-1}
-.card-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #e2e8f0}
-.card-header .icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
-.card-header h3{font-size:14px;font-weight:600}
-.card-body{font-size:14px;line-height:1.7}
-.sentiment-display{display:flex;align-items:center;gap:16px;padding:8px 0}
-.sentiment-icon{font-size:32px}
-.sentiment-label{font-size:18px;font-weight:600;margin-bottom:4px}
-.sentiment-score{font-size:13px;color:#64748b}
-.sentiment-bar{width:100%;height:6px;background:#e2e8f0;border-radius:99px;margin-top:8px;overflow:hidden}
-.sentiment-fill{height:100%;border-radius:99px;transition:width .6s ease}
-.keyword-tags{display:flex;flex-wrap:wrap;gap:8px}
-.keyword-tag{padding:4px 12px;background:#eef2ff;color:#2563eb;border-radius:99px;font-size:13px;font-weight:500}
-.keyword-tag .weight{color:#3b82f6;font-size:11px;margin-left:4px}
-.category-badge{display:inline-block;padding:6px 16px;border-radius:99px;font-size:14px;font-weight:600;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);color:#0369a1}
-.summary-text{background:#f8fafc;border-radius:8px;padding:16px;font-size:14px;line-height:1.8;border-left:3px solid #2563eb}
-.text-meta{display:flex;gap:16px;font-size:12px;color:#64748b;margin-top:8px}
-.empty-state{text-align:center;padding:60px 20px;color:#64748b}
-.empty-state .icon-big{font-size:48px;margin-bottom:16px}
-.empty-state h2{font-size:18px;color:#1e293b;margin-bottom:8px}
-.foot{text-align:center;padding:24px;color:#64748b;font-size:12px}
-.foot a{color:#2563eb;text-decoration:none}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column}
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.header h1{font-size:18px;font-weight:700;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{font-size:11px;padding:2px 10px;border-radius:99px;background:#eef2ff;color:var(--primary);font-weight:600}
+.header .links{margin-left:auto;display:flex;gap:12px}
+.header .links a{font-size:13px;color:var(--text2);text-decoration:none;padding:4px 12px;border-radius:6px}
+.header .links a:hover{background:#f1f5f9;color:var(--primary)}
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:260px;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-h{padding:16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600;color:var(--text2)}
+.sidebar-empty{padding:32px 16px;text-align:center;color:var(--text2);font-size:13px}
+.history-list{flex:1;overflow-y:auto;padding:8px}
+.h-item{padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px;transition:.15s}
+.h-item:hover{background:#f8fafc}
+.h-item .ht{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.h-item .htime{font-size:11px;color:var(--text2);margin-top:2px}
+.h-item.active{background:#eef2ff}
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat{flex:1;overflow-y:auto;padding:20px 24px}
+.msg{margin-bottom:20px;max-width:800px;margin-left:auto;margin-right:auto}
+.msg .mc{padding:16px 20px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);font-size:14px;line-height:1.7}
+.msg.user .mc{background:#eef2ff;border-color:#c7d2fe}
+.msg.user .mt{color:#1e40af}
+.res-grid{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin-top:12px}
+@media(max-width:768px){.res-grid{grid-template-columns:1fr}}
+.rc{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border)}
+.rc.full{grid-column:1/-1}
+.rc-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.rc-h .ico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.rc-h h4{font-size:13px;font-weight:600}
+.rc-b{font-size:13px;line-height:1.6}
+.tag{padding:3px 10px;border-radius:99px;font-size:12px;display:inline-block;margin:2px 3px}
+.bar{width:100%;height:5px;background:#e2e8f0;border-radius:99px;margin-top:8px;overflow:hidden}
+.bar-f{height:100%;border-radius:99px;transition:width .6s ease}
+.input-area{padding:16px 24px 20px;background:var(--card);border-top:1px solid var(--border);flex-shrink:0}
+.input-wrap{max-width:800px;margin:0 auto;display:flex;gap:10px;align-items:flex-end}
+.input-wrap textarea{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:14px;line-height:1.5;resize:none;outline:none;font-family:inherit;min-height:48px;max-height:120px}
+.input-wrap textarea:focus{border-color:var(--primary)}
+.sbtn{width:44px;height:44px;border-radius:10px;border:none;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sbtn:disabled{opacity:.4;cursor:not-allowed}
+.loading{display:flex;gap:4px;padding:8px 0}
+.loading span{width:8px;height:8px;border-radius:50%;background:#94a3b8;animation:b 1.4s infinite}
+.loading span:nth-child(2){animation-delay:.2s}
+.loading span:nth-child(3){animation-delay:.4s}
+@keyframes b{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px;text-align:center}
+.welcome .logo{font-size:48px;margin-bottom:12px;width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#eef2ff,#e0e7ff);display:flex;align-items:center;justify-content:center}
+.welcome h2{font-size:20px;font-weight:700;margin-bottom:6px}
+.welcome p{font-size:14px;color:var(--text2);max-width:400px;line-height:1.6;margin-bottom:20px}
+.examples{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.ec{padding:6px 14px;border-radius:99px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:12px;color:var(--text2)}
+.ec:hover{border-color:var(--primary);color:var(--primary)}
+.cbtn{padding:3px 8px;border-radius:4px;border:1px solid var(--border);background:0 0;cursor:pointer;font-size:11px;color:var(--text2);margin-left:auto}
+.cbtn:hover{background:#f8fafc;color:var(--primary)}
 </style>
 </head>
 <body>
-<div class="header"><div class="header-inner"><h1>AI 智文助手</h1></div></div>
-<div class="container">
-<div class="input-section">
-<textarea id="txt" placeholder="请输入你想要分析的中文文本..."></textarea>
-<div class="controls">
-<button class="mode-btn active" data-m="full">一站式分析</button>
-<button class="mode-btn" data-m="sentiment">情感分析</button>
-<button class="mode-btn" data-m="keywords">关键词</button>
-<button class="mode-btn" data-m="summary">摘要</button>
-<button class="mode-btn" data-m="category">分类</button>
-<button class="submit-btn" id="go">开始分析</button>
+<div class="header">
+<h1>AI 智文助手</h1><span class="badge">v1.1</span>
+<div class="links"><a href="/docs">API 文档</a><a href="#" id="clearBtn">清空记录</a></div>
 </div>
-<div class="loading" id="load"><div class="spinner"></div><span>分析中...</span></div>
+<div class="main">
+<div class="sidebar">
+<div class="sidebar-h">分析记录</div>
+<div class="history-list" id="hList"></div>
 </div>
-<div id="empty"><div class="icon-big" style="font-size:48px;text-align:center;padding:40px 0 16px">🔍</div>
-<h2 style="text-align:center;font-size:18px;color:#1e293b">输入文本，开始分析</h2>
-<p style="text-align:center;color:#64748b;font-size:14px">支持情感分析·关键词提取·文本摘要·自动分类</p></div>
-<div id="res" class="result-section"><div id="inputD" style="grid-column:1/-1;font-size:13px;color:#64748b;padding:8px 16px;background:#f8fafc;border-radius:8px;word-break:break-all"></div><div class="result-grid" id="grid"></div></div>
+<div class="content">
+<div class="chat" id="chat">
+<div class="welcome" id="welcome">
+<div class="logo">&#x1F50D;</div>
+<h2>开始分析文本</h2><p>支持情感分析 · 关键词提取 · 文本摘要 · 自动分类</p>
+<div class="examples">
+<span class="ec" data-ex="0">&#x1F60A; 正面</span>
+<span class="ec" data-ex="1">&#x1F61E; 负面</span>
+<span class="ec" data-ex="2">&#x1F4BB; 科技</span>
+<span class="ec" data-ex="3">&#x26BD; 体育</span>
 </div>
-<div class="foot"><p>AI 智文助手 · <a href="/docs">API 文档</a></p></div>
+</div>
+</div>
+<div class="input-area">
+<div class="input-wrap">
+<textarea id="txt" placeholder="输入文本，按 Enter 发送" rows="1"></textarea>
+<button class="sbtn" id="sbtn">&#x27A4;</button>
+</div>
+</div>
+</div>
+</div>
 <script>
-const EX = ['','今天天气真好，阳光明媚，心情非常愉快！','这个产品太差了，质量很差，完全不推荐。','人工智能正在改变世界，机器学习在医疗、金融等领域广泛应用。','昨晚的足球比赛太精彩了，梅西梅开二度，带领球队逆转取胜。'];
-let m='full';
-document.querySelectorAll('.mode-btn').forEach(b=>{b.onclick=()=>{document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');m=b.dataset.m;};});
-document.getElementById('go').onclick=analyze;document.getElementById('txt').onkeydown=e=>{if(e.key=='Enter'&&e.ctrlKey)analyze();};
-async function analyze(){
-const t=document.getElementById('txt').value.trim();if(!t)return;
-const lb=document.getElementById('load');const btn=document.getElementById('go');
-const em=document.getElementById('empty');const rs=document.getElementById('res');
-const gd=document.getElementById('grid');const id=document.getElementById('inputD');
-lb.classList.add('active');btn.disabled=true;em.style.display='none';id.textContent='📝 '+t;
-try{
-const ep=m==='full'?'/analyze':'/analyze/'+m;
-const r=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,lang:'zh'})});
-const d=await r.json();rs.classList.add('active');
-if(m==='full'){renderFull(gd,d);}else{renderSingle(gd,m,d);}
-}catch(e){gd.innerHTML='<div class="result-card full"><div style="background:#fef2f2;color:#dc2626;padding:12px;border-radius:8px">请求失败</div></div>';rs.classList.add('active');}
-lb.classList.remove('active');btn.disabled=false;
-}
-const SI={positive:{e:'😊',l:'正面',c:'#16a34a',b:'#f0fdf4'},negative:{e:'😞',l:'负面',c:'#dc2626',b:'#fef2f2'},neutral:{e:'😐',l:'中性',c:'#64748b',b:'#f8fafc'}};
-function renderFull(g,d){
-const s=d.sentiment||{};const kw=d.keywords||[];const si=SI[s.label]||SI.neutral;
-g.innerHTML='<div class="result-card"><div class="card-header"><div class="icon" style="background:'+si.b+';color:'+si.c+'">'+si.e+'</div><h3>情感分析</h3></div><div class="card-body"><div class="sentiment-display"><div class="sentiment-icon">'+si.e+'</div><div class="sentiment-info"><div class="sentiment-label" style="color:'+si.c+'">'+si.l+'</div><div class="sentiment-score">置信度 '+(s.score*100).toFixed(1)+'%</div></div></div><div class="sentiment-bar"><div class="sentiment-fill" style="width:'+(s.score*100)+'%;background:'+si.c+'"></div></div></div></div>'+
-'<div class="result-card"><div class="card-header"><div class="icon" style="background:#eef2ff;color:#4f46e5">🏷</div><h3>关键词</h3></div><div class="card-body"><div class="keyword-tags">'+
-(kw.map(k=>'<span class="keyword-tag">'+k.word+'<span class="weight">'+(k.weight*100).toFixed(0)+'%</span></span>').join('')||'<span style="color:#94a3b8">暂无</span>')+'</div></div></div>'+
-'<div class="result-card full"><div class="card-header"><div class="icon" style="background:#f0f9ff;color:#0284c7">📝</div><h3>文本摘要</h3></div><div class="card-body"><div class="summary-text">'+(d.summary?d.summary.summary||'文本较短，无需摘要':'文本较短，无需摘要')+'</div>'+(d.summary?'<div class="text-meta"><span>原文 '+d.summary.original_length+' 字</span><span>摘要 '+d.summary.summary_length+' 字</span></div>':'')+'</div></div>'+
-'<div class="result-card"><div class="card-header"><div class="icon" style="background:#fdf4ff;color:#a21caf">📂</div><h3>文本分类</h3></div><div class="card-body"><span class="category-badge">'+(d.category?d.category.category||'其他':'其他')+'</span>'+(d.category&&d.category.confidence>0?'<span style="margin-left:8px;font-size:13px;color:#94a3b8">'+(d.category.confidence*100).toFixed(0)+'%</span>':'')+'</div></div>';
-}
-function renderSingle(g,m,d){
-if(m==='sentiment'){const si=d.label==='positive'?SI.positive:d.label==='negative'?SI.negative:SI.neutral;
-g.innerHTML='<div class="result-card full"><div class="card-header"><div class="icon" style="background:'+si.b+';color:'+si.c+'">'+si.e+'</div><h3>情感分析</h3></div><div class="card-body"><div class="sentiment-display"><div class="sentiment-icon">'+si.e+'</div><div class="sentiment-info"><div class="sentiment-label" style="color:'+si.c+'">'+si.l+'</div><div class="sentiment-score">置信度 '+(d.score*100).toFixed(1)+'%</div></div></div><div class="sentiment-bar"><div class="sentiment-fill" style="width:'+(d.score*100)+'%;background:'+si.c+'"></div></div></div></div>';}
-else if(m==='keywords'){g.innerHTML='<div class="result-card full"><div class="card-header"><div class="icon" style="background:#eef2ff;color:#4f46e5">🏷</div><h3>关键词</h3></div><div class="card-body"><div class="keyword-tags">'+(d.keywords||[]).map(k=>'<span class="keyword-tag">'+k.word+'<span class="weight">'+(k.weight*100).toFixed(0)+'%</span></span>').join('')+'</div></div></div>';}
-else if(m==='summary'){g.innerHTML='<div class="result-card full"><div class="card-header"><div class="icon" style="background:#f0f9ff;color:#0284c7">📝</div><h3>文本摘要</h3></div><div class="card-body"><div class="summary-text">'+(d.summary||'文本较短')+'</div></div></div>';}
-else{g.innerHTML='<div class="result-card full"><div class="card-header"><div class="icon" style="background:#fdf4ff;color:#a21caf">📂</div><h3>文本分类</h3></div><div class="card-body"><span class="category-badge">'+(d.category||'其他')+'</span></div></div>';}
-}
-</script></body></html>
+var EXS=['今天天气真好，心情非常愉快！去公园散步，看到很多漂亮的花。','这个产品太差了，用了两天就坏了，完全不推荐购买。','人工智能正在改变世界，机器学习在医疗、金融等领域广泛应用。','昨晚的足球比赛太精彩了，梅西梅开二度，带领球队逆转取胜。'];
+var history=JSON.parse(localStorage.getItem('ai_hist')||'[]');
+function renderHist(){var el=document.getElementById('hList');if(history.length===0){el.innerHTML='<div class="sidebar-empty">暂无记录<br>输入文本开始分析</div>';return}
+var html='';for(var i=0;i<history.length;i++){var h=history[i];html+='<div class="h-item" data-i="'+i+'"><div class="ht">'+h.t.substring(0,25)+(h.t.length>25?'...':'')+'</div><div class="htime">'+h.ts+'</div></div>';}
+el.innerHTML=html;for(var i=0;i<history.length;i++){(function(idx){el.children[i].onclick=function(){loadHist(idx);};})(i);}}
+function loadHist(i){var h=history[i];var chat=document.getElementById('chat');document.getElementById('welcome').style.display='none';chat.innerHTML='<div class="msg user"><div class="mc"><div class="mt">'+escHtml(h.t)+'</div></div></div>'+buildRes(h.r);}
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function buildRes(d){var s=d.sentiment||{};var kw=d.keywords||[];var si={positive:{e:'&#x1F60A;',l:'正面',c:'#16a34a',b:'#f0fdf4'},negative:{e:'&#x1F61E;',l:'负面',c:'#dc2626',b:'#fef2f2'},neutral:{e:'&#x1F610;',l:'中性',c:'#64748b',b:'#f8fafc'}}[s.label]||{e:'&#x1F610;',l:'中性',c:'#64748b',b:'#f8fafc'};
+var cat=d.category?d.category.category||'其他':'其他';var conf=d.category?d.category.confidence:0;
+var kwTags=kw.length?kw.map(function(k){return '<span class="tag" style="background:#eef2ff;color:#4f46e5">'+escHtml(k.word)+'</span>';}).join(''):'<span style="color:#94a3b8">暂无</span>';
+var summ=d.summary?d.summary.summary||'文本较短，无需摘要':'文本较短，无需摘要';
+var summMeta=d.summary?'<div style="font-size:11px;color:var(--text2);margin-top:6px"><span>'+d.summary.original_length+' 字 &rarr; '+d.summary.summary_length+' 字</span></div>':'';
+var html='<div class="msg"><div class="mc"><div class="res-grid">';
+html+='<div class="rc"><div class="rc-h"><div class="ico" style="background:'+si.b+';color:'+si.c+'">'+si.e+'</div><h4>情感分析</h4></div><div class="rc-b"><span style="font-weight:600;color:'+si.c+'">'+si.l+'</span> <span style="font-size:12px;color:var(--text2)">'+(s.score*100).toFixed(1)+'%</span><div class="bar"><div class="bar-f" style="width:'+(s.score*100)+'%;background:'+si.c+'"></div></div></div></div>';
+html+='<div class="rc"><div class="rc-h"><div class="ico" style="background:#eef2ff;color:#4f46e5">&#x1F3F7;</div><h4>关键词</h4></div><div class="rc-b">'+kwTags+'</div></div>';
+html+='<div class="rc full"><div class="rc-h"><div class="ico" style="background:#f0f9ff;color:#0284c7">&#x1F4DD;</div><h4>文本摘要</h4></div><div class="rc-b"><div style="background:#f8fafc;padding:12px;border-radius:8px;border-left:3px solid var(--primary);font-size:13px">'+escHtml(summ)+'</div>'+summMeta+'</div></div>';
+html+='<div class="rc"><div class="rc-h"><div class="ico" style="background:#fdf4ff;color:#a21caf">&#x1F4C2;</div><h4>文本分类</h4></div><div class="rc-b"><span style="display:inline-block;padding:5px 14px;border-radius:99px;font-size:13px;font-weight:600;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);color:#0369a1">'+escHtml(cat)+'</span>'+(conf>0?' <span style="font-size:12px;color:var(--text2)">'+(conf*100).toFixed(0)+'%</span>':'')+'</div></div>';
+html+='</div></div></div>';return html;}
+function saveHist(text,result){var now=new Date();var ts=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');history.unshift({t:text,r:result,ts:ts});if(history.length>50)history=history.slice(0,50);localStorage.setItem('ai_hist',JSON.stringify(history));renderHist();}
+document.querySelectorAll('.ec').forEach(function(el){el.onclick=function(){document.getElementById('txt').value=EXS[parseInt(this.dataset.ex)];analyze();};});
+document.getElementById('txt').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();analyze();}});
+document.getElementById('sbtn').onclick=analyze;
+document.getElementById('clearBtn').onclick=function(){if(confirm('确定清空所有记录？')){history=[];localStorage.removeItem('ai_hist');renderHist();document.getElementById('chat').innerHTML='<div class="welcome" id="welcome"><div class="logo">&#x1F50D;</div><h2>开始分析文本</h2><p>支持情感分析 · 关键词提取 · 文本摘要 · 自动分类</p></div>';}};
+async function analyze(){var t=document.getElementById('txt').value.trim();if(!t)return;
+var btn=document.getElementById('sbtn');btn.disabled=true;
+var chat=document.getElementById('chat');var wel=document.getElementById('welcome');if(wel)wel.style.display='none';
+var um=document.createElement('div');um.className='msg user';um.innerHTML='<div class="mc"><div class="mt">'+escHtml(t)+'</div></div>';chat.appendChild(um);
+var lm=document.createElement('div');lm.className='msg';lm.innerHTML='<div class="mc"><div class="loading"><span></span><span></span><span></span></div></div>';chat.appendChild(lm);chat.scrollTop=chat.scrollHeight;
+try{var r=await fetch('/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,lang:'zh'})});var d=await r.json();lm.remove();chat.insertAdjacentHTML('beforeend',buildRes(d));chat.scrollTop=chat.scrollHeight;saveHist(t,d);document.getElementById('txt').value='';}catch(e){lm.innerHTML='<div class="mc"><div style="color:#dc2626;font-size:13px">请求失败，请重试</div></div>';}
+btn.disabled=false;document.getElementById('txt').focus();}
+renderHist();
+</script>
+</body>
+</html>
