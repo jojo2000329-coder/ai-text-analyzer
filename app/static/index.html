@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI 智文助手</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;background:#f8fafc;color:#1e293b}
+.header{background:#fff;border-bottom:1px solid #e2e8f0;padding:16px 24px}
+.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.header h1{font-size:20px;font-weight:600;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.container{max-width:960px;margin:0 auto;padding:24px 16px}
+.input-section{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:24px;margin-bottom:24px}
+textarea{width:100%;min-height:140px;padding:16px;font-size:15px;line-height:1.6;border:2px solid #e2e8f0;border-radius:10px;resize:vertical;outline:none;font-family:inherit}
+textarea:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+.controls{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
+.mode-btn{padding:7px 16px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;color:#64748b;font-weight:500}
+.mode-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.submit-btn{padding:8px 28px;border-radius:8px;border:none;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-left:auto}
+.submit-btn:disabled{opacity:0.5}
+.loading{display:none;align-items:center;gap:8px;color:#64748b;margin-top:12px}
+.loading.active{display:flex}
+.spinner{width:16px;height:16px;border:2px solid #e2e8f0;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.result-section{display:none}
+.result-section.active{display:block}
+.result-grid{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:20px;border:1px solid #e2e8f0}
+.result-card.full{grid-column:1/-1}
+.card-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #e2e8f0}
+.card-header .icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.card-header h3{font-size:14px;font-weight:600}
+.card-body{font-size:14px;line-height:1.7}
+.sentiment-display{display:flex;align-items:center;gap:16px;padding:8px 0}
+.sentiment-icon{font-size:32px}
+.sentiment-label{font-size:18px;font-weight:600;margin-bottom:4px}
+.sentiment-score{font-size:13px;color:#64748b}
+.sentiment-bar{width:100%;height:6px;background:#e2e8f0;border-radius:99px;margin-top:8px;overflow:hidden}
+.sentiment-fill{height:100%;border-radius:99px;transition:width .6s ease}
+.keyword-tags{display:flex;flex-wrap:wrap;gap:8px}
+.keyword-tag{padding:4px 12px;background:#eef2ff;color:#2563eb;border-radius:99px;font-size:13px;font-weight:500}
+.keyword-tag .weight{color:#3b82f6;font-size:11px;margin-left:4px}
+.category-badge{display:inline-block;padding:6px 16px;border-radius:99px;font-size:14px;font-weight:600;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);color:#0369a1}
+.summary-text{background:#f8fafc;border-radius:8px;padding:16px;font-size:14px;line-height:1.8;border-left:3px solid #2563eb}
+.text-meta{display:flex;gap:16px;font-size:12px;color:#64748b;margin-top:8px}
+.empty-state{text-align:center;padding:60px 20px;color:#64748b}
+.empty-state .icon-big{font-size:48px;margin-bottom:16px}
+.empty-state h2{font-size:18px;color:#1e293b;margin-bottom:8px}
+.foot{text-align:center;padding:24px;color:#64748b;font-size:12px}
+.foot a{color:#2563eb;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="header"><div class="header-inner"><h1>AI 智文助手</h1></div></div>
+<div class="container">
+<div class="input-section">
+<textarea id="txt" placeholder="请输入你想要分析的中文文本..."></textarea>
+<div class="controls">
+<button class="mode-btn active" data-m="full">一站式分析</button>
+<button class="mode-btn" data-m="sentiment">情感分析</button>
+<button class="mode-btn" data-m="keywords">关键词</button>
+<button class="mode-btn" data-m="summary">摘要</button>
+<button class="mode-btn" data-m="category">分类</button>
+<button class="submit-btn" id="go">开始分析</button>
+</div>
+<div class="loading" id="load"><div class="spinner"></div><span>分析中...</span></div>
+</div>
+<div id="empty"><div class="icon-big" style="font-size:48px;text-align:center;padding:40px 0 16px">🔍</div>
+<h2 style="text-align:center;font-size:18px;color:#1e293b">输入文本，开始分析</h2>
+<p style="text-align:center;color:#64748b;font-size:14px">支持情感分析·关键词提取·文本摘要·自动分类</p></div>
+<div id="res" class="result-section"><div id="inputD" style="grid-column:1/-1;font-size:13px;color:#64748b;padding:8px 16px;background:#f8fafc;border-radius:8px;word-break:break-all"></div><div class="result-grid" id="grid"></div></div>
+</div>
+<div class="foot"><p>AI 智文助手 · <a href="/docs">API 文档</a></p></div>
+<script>
+const EX = ['','今天天气真好，阳光明媚，心情非常愉快！','这个产品太差了，质量很差，完全不推荐。','人工智能正在改变世界，机器学习在医疗、金融等领域广泛应用。','昨晚的足球比赛太精彩了，梅西梅开二度，带领球队逆转取胜。'];
+let m='full';
+document.querySelectorAll('.mode-btn').forEach(b=>{b.onclick=()=>{document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');m=b.dataset.m;};});
+document.getElementById('go').onclick=analyze;document.getElementById('txt').onkeydown=e=>{if(e.key=='Enter'&&e.ctrlKey)analyze();};
+async function analyze(){
+const t=document.getElementById('txt').value.trim();if(!t)return;
+const lb=document.getElementById('load');const btn=document.getElementById('go');
+const em=document.getElementById('empty');const rs=document.getElementById('res');
+const gd=document.getElementById('grid');const id=document.getElementById('inputD');
+lb.classList.add('active');btn.disabled=true;em.style.display='none';id.textContent='📝 '+t;
+try{
+const ep=m==='full'?'/analyze':'/analyze/'+m;
+const r=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,lang:'zh'})});
+const d=await r.json();rs.classList.add('active');
+if(m==='full'){renderFull(gd,d);}else{renderSingle(gd,m,d);}
+}catch(e){gd.innerHTML='<div class="result-card full"><div style="background:#fef2f2;color:#dc2626;padding:12px;border-radius:8px">请求失败</div></div>';rs.classList.add('active');}
+lb.classList.remove('active');btn.disabled=false;
+}
+const SI={positive:{e:'😊',l:'正面',c:'#16a34a',b:'#f0fdf4'},negative:{e:'😞',l:'负面',c:'#dc2626',b:'#fef2f2'},neutral:{e:'😐',l:'中性',c:'#64748b',b:'#f8fafc'}};
+function renderFull(g,d){
+const s=d.sentiment||{};const kw=d.keywords||[];const si=SI[s.label]||SI.neutral;
+g.innerHTML='<div class="result-card"><div class="card-header"><div class="icon" style="background:'+si.b+';color:'+si.c+'">'+si.e+'</div><h3>情感分析</h3></div><div class="card-body"><div class="sentiment-display"><div class="sentiment-icon">'+si.e+'</div><div class="sentiment-info"><div class="sentiment-label" style="color:'+si.c+'">'+si.l+'</div><div class="sentiment-score">置信度 '+(s.score*100).toFixed(1)+'%</div></div></div><div class="sentiment-bar"><div class="sentiment-fill" style="width:'+(s.score*100)+'%;background:'+si.c+'"></div></div></div></div>'+
+'<div class="result-card"><div class="card-header"><div class="icon" style="background:#eef2ff;color:#4f46e5">🏷</div><h3>关键词</h3></div><div class="card-body"><div class="keyword-tags">'+
+(kw.map(k=>'<span class="keyword-tag">'+k.word+'<span class="weight">'+(k.weight*100).toFixed(0)+'%</span></span>').join('')||'<span style="color:#94a3b8">暂无</span>')+'</div></div></div>'+
+'<div class="result-card full"><div class="card-header"><div class="icon" style="background:#f0f9ff;color:#0284c7">📝</div><h3>文本摘要</h3></div><div class="card-body"><div class="summary-text">'+(d.summary?d.summary.summary||'文本较短，无需摘要':'文本较短，无需摘要')+'</div>'+(d.summary?'<div class="text-meta"><span>原文 '+d.summary.original_length+' 字</span><span>摘要 '+d.summary.summary_length+' 字</span></div>':'')+'</div></div>'+
+'<div class="result-card"><div class="card-header"><div class="icon" style="background:#fdf4ff;color:#a21caf">📂</div><h3>文本分类</h3></div><div class="card-body"><span class="category-badge">'+(d.category?d.category.category||'其他':'其他')+'</span>'+(d.category&&d.category.confidence>0?'<span style="margin-left:8px;font-size:13px;color:#94a3b8">'+(d.category.confidence*100).toFixed(0)+'%</span>':'')+'</div></div>';
+}
+function renderSingle(g,m,d){
+if(m==='sentiment'){const si=d.label==='positive'?SI.positive:d.label==='negative'?SI.negative:SI.neutral;
+g.innerHTML='<div class="result-card full"><div class="card-header"><div class="icon" style="background:'+si.b+';color:'+si.c+'">'+si.e+'</div><h3>情感分析</h3></div><div class="card-body"><div class="sentiment-display"><div class="sentiment-icon">'+si.e+'</div><div class="sentiment-info"><div class="sentiment-label" style="color:'+si.c+'">'+si.l+'</div><div class="sentiment-score">置信度 '+(d.score*100).toFixed(1)+'%</div></div></div><div class="sentiment-bar"><div class="sentiment-fill" style="width:'+(d.score*100)+'%;background:'+si.c+'"></div></div></div></div>';}
+else if(m==='keywords'){g.innerHTML='<div class="result-card full"><div class="card-header"><div class="icon" style="background:#eef2ff;color:#4f46e5">🏷</div><h3>关键词</h3></div><div class="card-body"><div class="keyword-tags">'+(d.keywords||[]).map(k=>'<span class="keyword-tag">'+k.word+'<span class="weight">'+(k.weight*100).toFixed(0)+'%</span></span>').join('')+'</div></div></div>';}
+else if(m==='summary'){g.innerHTML='<div class="result-card full"><div class="card-header"><div class="icon" style="background:#f0f9ff;color:#0284c7">📝</div><h3>文本摘要</h3></div><div class="card-body"><div class="summary-text">'+(d.summary||'文本较短')+'</div></div></div>';}
+else{g.innerHTML='<div class="result-card full"><div class="card-header"><div class="icon" style="background:#fdf4ff;color:#a21caf">📂</div><h3>文本分类</h3></div><div class="card-body"><span class="category-badge">'+(d.category||'其他')+'</span></div></div>';}
+}
+</script></body></html>

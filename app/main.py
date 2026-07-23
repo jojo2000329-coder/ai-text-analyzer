@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
 
 from app.schemas import (
@@ -10,7 +12,6 @@ from app.services import sentiment, keywords, summarizer, classifier
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 启动时预加载 jieba 词典
     import jieba
     jieba.initialize()
     print("[启动] jieba 词典加载完成")
@@ -25,10 +26,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# 挂载静态文件
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-@app.get("/", response_model=HealthResponse)
+
+@app.get("/", response_class=FileResponse)
 async def root():
-    return HealthResponse()
+    return FileResponse("app/static/index.html", media_type="text/html")
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -38,7 +42,6 @@ async def health():
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_text(req: TextRequest):
-    """一站式文本分析：情感分析 + 关键词提取 + 摘要 + 分类"""
     try:
         return AnalyzeResponse(
             text=req.text,
@@ -56,7 +59,6 @@ async def analyze_text(req: TextRequest):
 
 @app.post("/analyze/sentiment")
 async def analyze_sentiment(req: TextRequest):
-    """仅情感分析"""
     try:
         return SentimentResult(**sentiment.analyze(req.text, req.lang))
     except Exception as e:
@@ -65,7 +67,6 @@ async def analyze_sentiment(req: TextRequest):
 
 @app.post("/analyze/keywords")
 async def analyze_keywords(req: TextRequest):
-    """仅关键词提取"""
     try:
         return {"keywords": [
             KeywordItem(**kw) for kw in keywords.extract(req.text, lang=req.lang)
@@ -76,7 +77,6 @@ async def analyze_keywords(req: TextRequest):
 
 @app.post("/analyze/summary")
 async def analyze_summary(req: TextRequest):
-    """仅文本摘要"""
     try:
         return SummaryResult(**summarizer.summarize(req.text, lang=req.lang))
     except Exception as e:
@@ -85,7 +85,6 @@ async def analyze_summary(req: TextRequest):
 
 @app.post("/analyze/category")
 async def analyze_category(req: TextRequest):
-    """仅文本分类"""
     try:
         return CategoryResult(**classifier.classify(req.text, req.lang))
     except Exception as e:
