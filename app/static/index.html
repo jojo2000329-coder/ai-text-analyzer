@@ -1,61 +1,75 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>AI 饮食健康助手</title>
+<body style="display:none">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;background:#f0f4f8;color:#1e293b;height:100vh;display:flex;flex-direction:column}
 .hdr{background:#fff;border-bottom:1px solid #e2e8f0;padding:14px 24px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .hdr h1{font-size:18px;font-weight:700;background:linear-gradient(135deg,#059669,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .badge{font-size:11px;padding:2px 10px;border-radius:99px;background:#ecfdf5;color:#059669;font-weight:600}
+.hdr .r{margin-left:auto;display:flex;gap:8px}
+.hdr .r button{padding:6px 14px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:12px;color:#64748b}
+.hdr .r button:hover{background:#f1f5f9;color:#059669}
 .ct{flex:1;overflow-y:auto;padding:20px 24px;scroll-behavior:smooth}
-.msg{margin-bottom:16px;max-width:800px;margin-left:auto;margin-right:auto;animation:fIn .3s}
-@keyframes fIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.msg .mc{padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.8;white-space:pre-wrap;word-break:break-word;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.msg{margin-bottom:16px;max-width:780px;margin-left:auto;margin-right:auto;animation:fI .3s}
+@keyframes fI{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg .mc{padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
 .msg.u{display:flex;flex-direction:row-reverse;gap:10px;align-items:flex-end}
-.msg.u .mc{background:#d1fae5;border:1px solid #a7f3d0;color:#065f46;border-bottom-right-radius:4px;max-width:70%}
-.msg.u .av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;background:#d1fae5;color:#059669;flex-shrink:0}
+.msg.u .mc{background:#d1fae5;border:1px solid #a7f3d0;color:#065f46;border-bottom-right-radius:4px;max-width:75%}
+.msg.u .av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;background:#d1fae5;color:#059669;flex-shrink:0}
 .msg.b{display:flex;gap:10px;align-items:flex-start}
 .msg.b .mc{background:#fff;border:1px solid #e2e8f0;border-bottom-left-radius:4px}
-.msg.b .av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;background:#f0f0ff;color:#7c3aed;flex-shrink:0}
+.msg.b .av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;background:#f0f0ff;color:#7c3aed;flex-shrink:0}
 .ld{display:flex;gap:4px;padding:4px 0}
 .ld span{width:7px;height:7px;border-radius:50%;background:#94a3b8;animation:bn 1.4s infinite}
 .ld span:nth-child(2){animation-delay:.2s}.ld span:nth-child(3){animation-delay:.4s}
 @keyframes bn{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
 .in{padding:16px 24px 20px;background:#fff;border-top:1px solid #e2e8f0;flex-shrink:0}
-.iw{max-width:800px;margin:0 auto;display:flex;gap:10px;align-items:flex-end}
-.iw textarea{flex:1;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;line-height:1.5;resize:none;outline:none;font-family:inherit;min-height:48px;max-height:120px;transition:.2s}
+.iw{max-width:780px;margin:0 auto;display:flex;gap:10px;align-items:flex-end}
+.iw textarea{flex:1;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;line-height:1.5;resize:none;outline:none;font-family:inherit;min-height:48px;max-height:120px}
 .iw textarea:focus{border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.1)}
-.sbtn{width:44px;height:44px;border-radius:10px;border:none;background:linear-gradient(135deg,#059669,#10b981);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:.2s}
-.sbtn:hover{opacity:.9;transform:translateY(-1px)}.sbtn:disabled{opacity:.4;cursor:not-allowed}
-.ex{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;margin-bottom:6px}
-.ec{padding:5px 12px;border-radius:99px;border:1px solid #d1d5db;background:#fff;cursor:pointer;font-size:11px;color:#6b7280;transition:.15s}
-.ec:hover{border-color:#10b981;color:#059669}
+.sbtn{width:44px;height:44px;border-radius:10px;border:none;background:linear-gradient(135deg,#059669,#10b981);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sbtn:disabled{opacity:.4;cursor:not-allowed}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:999}
+.modal.show{display:flex}
+.modal-c{background:#fff;border-radius:14px;padding:28px;max-width:440px;width:90%;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+.modal-c h3{font-size:16px;margin-bottom:16px}
+.modal-c input{width:100%;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;font-size:13px;outline:none;margin-bottom:12px}
+.modal-c input:focus{border-color:#10b981}
+.modal-c .btns{display:flex;gap:8px;justify-content:flex-end}
+.modal-c .btns button{padding:8px 20px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600}
+.modal-c .btns .primary{background:#059669;color:#fff}
+.modal-c .btns .cancel{background:#f1f5f9;color:#64748b}
+.st-badge{font-size:10px;padding:2px 8px;border-radius:99px;background:#fee2e2;color:#dc2626;font-weight:600;margin-left:6px}
+.st-badge.on{background:#d1fae5;color:#059669}
+.ms{font-size:11px;color:#94a3b8;text-align:center;padding:4px}
 </style>
-</head>
-<body>
-<div class="hdr"><h1>🥗 AI 饮食健康助手</h1><span class="badge">v2.0</span></div>
+<div class="hdr"><h1>🥗 AI 饮食健康助手</h1><span class="badge">v2.1</span><div class="r"><button onclick="showSettings()">⚙️</button></div></div>
 <div class="ct" id="ch"></div>
-<div class="in">
-<div class="iw">
-<textarea id="tx" placeholder="输入饮食健康问题..." rows="1"></textarea>
-<button class="sbtn" id="sbtn">➤</button>
-</div>
-<div class="ex" id="ex"></div>
-</div>
+<div class="in"><div class="iw"><textarea id="tx" placeholder="输入饮食健康问题..." rows="1"></textarea><button class="sbtn" id="sbtn">➤</button></div></div>
+<div class="modal" id="settings"><div class="modal-c"><h3>⚙️ 设置</h3><p style="font-size:13px;color:#64748b;margin-bottom:12px">输入你的 DeepSeek API 密钥，即可开启自由聊天模式</p>
+<input id="key" placeholder="sk-..." type="password"><div class="btns"><button class="cancel" onclick="hideSettings()">取消</button><button class="primary" onclick="saveKey()">保存</button></div></div></div>
 <script>
-var E=["蓝莓有什么作用？","补充维生素C吃什么水果？","减脂期吃什么好？","便秘了吃什么？","含维生素A的蔬菜有哪些？","增肌吃什么？"];
-function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}
-function addMsg(role,content){var ch=document.getElementById('ch');var d=document.createElement('div');d.className='msg '+(role==='u'?'u':'b');d.innerHTML='<div class="av">'+(role==='u'?'👤':'🥗')+'</div><div class="mc">'+esc(content)+'</div>';ch.appendChild(d);ch.scrollTop=ch.scrollHeight}
-function showEx(){var ex=document.getElementById('ex');ex.innerHTML='';E.forEach(function(t,i){var b=document.createElement('button');b.className='ec';b.textContent=t;b.onclick=function(){document.getElementById('tx').value=t;a()};ex.appendChild(b)})}
-function welcome(){addMsg('b','你好！我是你的AI饮食健康助手 🥗\n\n你可以问我：\n• 「蓝莓有什么作用？」\n• 「补充维生素C吃什么？」\n• 「减脂期吃什么好？」\n• 「便秘了怎么办？」\n\n试试下面的快捷提问👇');showEx()}
-document.getElementById('tx').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();a()}})
-document.getElementById('sbtn').onclick=a
-async function a(){var t=document.getElementById('tx').value.trim();if(!t)return;var btn=document.getElementById('sbtn');btn.disabled=true;addMsg('u',t);
-var ld=document.createElement('div');ld.className='msg b';ld.innerHTML='<div class="av">🥗</div><div class="mc"><div class="ld"><span></span><span></span><span></span></div></div>';document.getElementById('ch').appendChild(ld);document.getElementById('ch').scrollTop=document.getElementById('ch').scrollHeight;
-try{var r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});var d=await r.json();ld.remove();addMsg('b',d.answer);document.getElementById('tx').value='';}catch(e){ld.innerHTML='<div class="msg b"><div class="av">🥗</div><div class="mc" style="color:#dc2626">请求失败，请重试</div></div>'}
-btn.disabled=false;document.getElementById('tx').focus()}
+var KEY=localStorage.getItem("ds_key")||"";
+function showSettings(){document.getElementById("settings").classList.add("show");document.getElementById("key").value=KEY}
+function hideSettings(){document.getElementById("settings").classList.remove("show")}
+function saveKey(){KEY=document.getElementById("key").value.trim();localStorage.setItem("ds_key",KEY);hideSettings();showStatus()}
+function showStatus(){var s=document.querySelector(".st-badge");if(KEY){if(s){s.textContent="AI";s.className="st-badge on"}}else{if(s)s.remove()}}
+function esc(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function addMsg(role,content){var ch=document.getElementById("ch");var d=document.createElement("div");d.className="msg "+(role==="u"?"u":"b");d.innerHTML='<div class="av">'+(role==="u"?"👤":"🥗")+'</div><div class="mc">'+esc(content)+"</div>";ch.appendChild(d);ch.scrollTop=ch.scrollHeight}
+async function callAI(text){if(!KEY)return null;try{var r=await fetch("https://api.deepseek.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+KEY},body:JSON.stringify({model:"deepseek-chat",messages:[{role:"system",content:"你是一个专业的饮食营养健康助手。用中文回答关于食物、营养、饮食的问题。回答要自然详细。"},{role:"user",content:text}],temperature:0.7,max_tokens:800})});if(!r.ok)return null;var d=await r.json();return d.choices[0].message.content}catch(e){return null}}
+async function callKB(text){try{var r=await fetch("/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:text})});var d=await r.json();return d.answer}catch(e){return null}}
+document.getElementById("tx").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}})
+document.getElementById("sbtn").onclick=send
+async function send(){var t=document.getElementById("tx").value.trim();if(!t)return;var btn=document.getElementById("sbtn");btn.disabled=true;addMsg("u",t);
+var lm=document.createElement("div");lm.className="msg b";lm.innerHTML='<div class="av">🥗</div><div class="mc"><div class="ld"><span></span><span></span><span></span></div></div>';document.getElementById("ch").appendChild(lm);document.getElementById("ch").scrollTop=document.getElementById("ch").scrollHeight;
+var ans=null;try{ans=await callAI(t)}catch(e){}finally{if(!ans)ans=await callKB(t)}
+lm.remove();if(ans){addMsg("b",ans)}else{addMsg("b","抱歉，暂时无法回答这个问题")}
+if(ans&&document.querySelector(".st-badge")){}document.getElementById("tx").value="";btn.disabled=false;document.getElementById("tx").focus()}
+function welcome(){addMsg("b","你好！我是你的AI饮食健康助手 🥗\\n\\n• 点击 ⚙️ 输入 DeepSeek API 密钥开启自由聊天\\n• 或者直接问我关于食物的问题")}
 welcome();
 </script>
 </body>
