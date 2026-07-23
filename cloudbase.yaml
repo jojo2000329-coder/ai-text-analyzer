@@ -1,0 +1,29 @@
+﻿---
+# 腾讯云 CloudBase 云托管配置文件
+# 文档：https://cloud.tencent.com/document/product/1243
+
+spec:
+  name: ai-text-analyzer
+  type: kubernetes
+  container:
+    port: 8080
+    health_check_path: /health
+    cpu: 0.5
+    memory: 512Mi
+    minReplicas: 1
+    maxReplicas: 5
+    env:
+      - name: TZ
+        value: Asia/Shanghai
+  autoscaling:
+    enable: true
+    targetCPUUtilizationPercentage: 60
+  service:
+    enable: true
+    protocol: http
+    timeout: 30
+  hooks:
+    - type: postdeploy
+      content: |
+        echo "Deploy complete!"
+  # 更多配置请参考腾讯云文档
