@@ -9,7 +9,7 @@ def ai_chat(query):
     if not api_key:
         return None
     try:
-        client = openai.OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+        client = openai.OpenAI(api_key=api_key, base_url="https://api.deepseek.com", timeout=15)
         resp = client.chat.completions.create(
             model="deepseek-chat",
             messages=[
@@ -18,7 +18,9 @@ def ai_chat(query):
             ],
             temperature=0.7,
             max_tokens=800,
+            timeout=15,
         )
         return resp.choices[0].message.content
     except Exception as e:
+        print(f"[AI Chat Error] {e}")
         return None
