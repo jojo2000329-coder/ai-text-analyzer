@@ -32,6 +32,10 @@ async def root():
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(req: ChatRequest):
+    from app.nutrition.ai_chat import ai_chat as ai_fn
+    ai_resp = ai_fn(req.text)
+    if ai_resp:
+        return ChatResponse(answer=ai_resp)
     from app.nutrition.chat_engine import chat as chat_fn
     try:
         answer = chat_fn(req.text)
