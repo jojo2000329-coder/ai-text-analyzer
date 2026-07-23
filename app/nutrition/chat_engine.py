@@ -1,4 +1,4 @@
-﻿import re
+import re
 from .food_data import (ALL_FOODS, FRUITS, VEGETABLES, NUTRIENT_NAMES, NUTRIENT_SHORT,
                          DIET_TIPS, HEALTH_TIPS, ALIAS_TO_FOOD, DAILY_ADVICE)
 
@@ -132,42 +132,35 @@ def handle_general_help():
             "💊 **关于健康问题**：\n  • 「便秘吃什么？」\n  • 「感冒了注意什么？」\n\n试试看吧！")
 
 def chat(query):
-    if not query or not query.strip():
-        return "请输入你的问题"
-    text = query.strip()
-    if text in ["帮助", "help", "你好", "hi", "功能", "菜单"]:
-        return handle_general_help()
-    food_match = re.search(r'[（(]?([\u4e00-\u9fff]{2,4})[）)]?(?:的|有|含|作用|功效|营养|好处|价值)', text)
-    if not food_match:
-        food_match = re.search(r'([\u4e00-\u9fff]{2,4})(?:的益处|的好处|作用|功效|营养|热量|卡路里|价值)', text)
-    if not food_match:
-        food_match = re.search(r'^(?:请问|我想问|告诉我|推荐)?([\u4e00-\u9fff]{2,4})[，,、]', text)
-    if not food_match:
-        food_match = re.search(r'([\u4e00-\u9fff]{2,4})是(?:什么|哪些|啥)', text)
-    if food_match:
-        candidate = food_match.group(1)
-        if find_food(candidate):
-            result = handle_food_query(text, candidate)
-            if result:
-                return result
-    for word_len in [4, 3, 2]:
-        for i in range(len(text) - word_len + 1):
-            candidate = text[i:i+word_len]
-            if find_food(candidate):
-                result = handle_food_query(text, candidate)
-                if result:
-                    return result
-    nk = get_nutrient_key(text)
-    if nk:
-        result = handle_nutrient_query(text, nk)
-        if result:
-            return result
-    result = handle_diet_query(text)
-    if result:
-        return result
-    result = handle_health_query(text)
-    if result:
-        return result
-    return ("抱歉，我暂时无法回答这个问题 😅\n\n"
-            "你可以试试问：\n  • 「蓝莓有什么作用？」\n  • 「西瓜每天吃好吗？」\n"
-            "  • 「补充维生素C吃什么？」\n  • 「减脂期吃什么好？」\n  • 「便秘了吃什么？」")
+     if not query or not query.strip():
+         return "请输入你的问题"
+     text = query.strip()
+     if text in ["帮助", "help", "你好", "hi", "功能", "菜单"]:
+         return handle_general_help()
+     found = None
+     for wl in [4,3,2]:
+         for i in range(len(text)-wl+1):
+             c = text[i:i+wl]
+             if c in ALL_FOODS or c in ALIAS_TO_FOOD:
+                 found = c; break
+         if found: break
+     if found:
+         if found in ALIAS_TO_FOOD:
+             found = ALIAS_TO_FOOD[found]
+         r = handle_food_query(text, found)
+         if r: return r
+     nk = get_nutrient_key(text)
+     if nk:
+         r = handle_nutrient_query(text, nk)
+         if r: return r
+     r = handle_diet_query(text)
+     if r: return r
+     r = handle_health_query(text)
+     if r: return r
+     return ("抱歉，我暂时无法回答这个问题 😅\n\n"
+             "你可以试试问：\n"
+             "  \u2022 「蓝莓有什么作用？」\n"
+             "  \u2022 「西瓜每天吃好吗？」\n"
+             "  \u2022 「补充维生素C吃什么？」\n"
+             "  \u2022 「减脂期吃什么好？」\n"
+             "  \u2022 「便秘了吃什么？」")
