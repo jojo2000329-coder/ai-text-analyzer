@@ -3,129 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AI 智文助手 - 智能文本分析</title>
+<title>AI 智文助手</title>
 <style>
-:root{--primary:#2563eb;--bg:#f0f4f8;--card:#fff;--text:#1e293b;--text2:#64748b;--border:#e2e8f0;--radius:12px}
+:root{--p:#2563eb;--ph:#1d4ed8;--bg:#f0f4f8;--c:#fff;--t:#1e293b;--t2:#64748b;--b:#e2e8f0;--r:12px}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column}
-.header{background:var(--card);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0}
-.header h1{font-size:18px;font-weight:700;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.badge{font-size:11px;padding:2px 10px;border-radius:99px;background:#eef2ff;color:var(--primary);font-weight:600}
-.header .links{margin-left:auto;display:flex;gap:12px}
-.header .links a{font-size:13px;color:var(--text2);text-decoration:none;padding:4px 12px;border-radius:6px}
-.header .links a:hover{background:#f1f5f9;color:var(--primary)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;background:var(--bg);color:var(--t);height:100vh;display:flex;flex-direction:column}
+.hdr{background:var(--c);border-bottom:1px solid var(--b);padding:14px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.hdr h1{font-size:18px;font-weight:700;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{font-size:11px;padding:2px 10px;border-radius:99px;background:#eef2ff;color:var(--p);font-weight:600}
+.hdr .r{margin-left:auto;display:flex;gap:8px}
+.hdr .r button{padding:6px 14px;border-radius:8px;border:1px solid var(--b);background:var(--c);cursor:pointer;font-size:12px;color:var(--t2)}
+.hdr .r button:hover{background:#f1f5f9;color:var(--p)}
 .main{display:flex;flex:1;overflow:hidden}
-.sidebar{width:260px;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
-.sidebar-h{padding:16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600;color:var(--text2)}
-.sidebar-empty{padding:32px 16px;text-align:center;color:var(--text2);font-size:13px}
-.history-list{flex:1;overflow-y:auto;padding:8px}
-.h-item{padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px;transition:.15s}
-.h-item:hover{background:#f8fafc}
-.h-item .ht{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.h-item .htime{font-size:11px;color:var(--text2);margin-top:2px}
-.h-item.active{background:#eef2ff}
-.content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.chat{flex:1;overflow-y:auto;padding:20px 24px}
-.msg{margin-bottom:20px;max-width:800px;margin-left:auto;margin-right:auto}
-.msg .mc{padding:16px 20px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);font-size:14px;line-height:1.7}
-.msg.user .mc{background:#eef2ff;border-color:#c7d2fe}
-.msg.user .mt{color:#1e40af}
-.res-grid{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin-top:12px}
-@media(max-width:768px){.res-grid{grid-template-columns:1fr}}
-.rc{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border)}
-.rc.full{grid-column:1/-1}
-.rc-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
-.rc-h .ico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
-.rc-h h4{font-size:13px;font-weight:600}
-.rc-b{font-size:13px;line-height:1.6}
-.tag{padding:3px 10px;border-radius:99px;font-size:12px;display:inline-block;margin:2px 3px}
-.bar{width:100%;height:5px;background:#e2e8f0;border-radius:99px;margin-top:8px;overflow:hidden}
-.bar-f{height:100%;border-radius:99px;transition:width .6s ease}
-.input-area{padding:16px 24px 20px;background:var(--card);border-top:1px solid var(--border);flex-shrink:0}
-.input-wrap{max-width:800px;margin:0 auto;display:flex;gap:10px;align-items:flex-end}
-.input-wrap textarea{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:14px;line-height:1.5;resize:none;outline:none;font-family:inherit;min-height:48px;max-height:120px}
-.input-wrap textarea:focus{border-color:var(--primary)}
-.sbtn{width:44px;height:44px;border-radius:10px;border:none;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.sbtn:disabled{opacity:.4;cursor:not-allowed}
-.loading{display:flex;gap:4px;padding:8px 0}
-.loading span{width:8px;height:8px;border-radius:50%;background:#94a3b8;animation:b 1.4s infinite}
-.loading span:nth-child(2){animation-delay:.2s}
-.loading span:nth-child(3){animation-delay:.4s}
-@keyframes b{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
-.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px;text-align:center}
-.welcome .logo{font-size:48px;margin-bottom:12px;width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#eef2ff,#e0e7ff);display:flex;align-items:center;justify-content:center}
-.welcome h2{font-size:20px;font-weight:700;margin-bottom:6px}
-.welcome p{font-size:14px;color:var(--text2);max-width:400px;line-height:1.6;margin-bottom:20px}
-.examples{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.ec{padding:6px 14px;border-radius:99px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:12px;color:var(--text2)}
-.ec:hover{border-color:var(--primary);color:var(--primary)}
-.cbtn{padding:3px 8px;border-radius:4px;border:1px solid var(--border);background:0 0;cursor:pointer;font-size:11px;color:var(--text2);margin-left:auto}
-.cbtn:hover{background:#f8fafc;color:var(--primary)}
+.sb{width:260px;background:var(--c);border-right:1px solid var(--b);display:flex;flex-direction:column;flex-shrink:0}
+.sb-h{padding:16px;border-bottom:1px solid var(--b);font-size:13px;font-weight:600;color:var(--t2);display:flex;justify-content:space-between;align-items:center}
+.sb-h button{padding:4px 10px;border-radius:6px;border:none;background:#eef2ff;color:var(--p);cursor:pointer;font-size:11px}
+.sb-e{padding:32px 16px;text-align:center;color:var(--t2);font-size:13px;line-height:1.8}
+.hl{flex:1;overflow-y:auto;padding:8px}
+.hi{padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px;transition:.15s}
+.hi:hover{background:#f8fafc}
+.hi .ht{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hi .hts{font-size:11px;color:var(--t2);margin-top:2px}
+.hi.act{background:#eef2ff}
+.ct{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.ch{flex:1;overflow-y:auto;padding:20px 24px;scroll-behavior:smooth}
+.wl{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px;text-align:center}
+.wl .lg{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#eef2ff,#e0e7ff);display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:16px}
+.wl h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.wl p{font-size:14px;color:var(--t2);max-width:360px;line-height:1.6;margin-bottom:20px}
+.ex{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.ec{padding:7px 16px;border-radius:99px;border:1px solid var(--b);background:var(--c);cursor:pointer;font-size:12px;color:var(--t2);transition:.15s}
+.ec:hover{border-color:var(--p);color:var(--p);background:#f8fafc}
+.msg{margin-bottom:20px;max-width:800px;margin-left:auto;margin-right:auto;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg .mc{padding:16px 20px;border-radius:var(--r);background:var(--c);border:1px solid var(--b);font-size:14px;line-height:1.7}
+.msg.u .mc{background:#eef2ff;border-color:#c7d2fe}
+.msg.u .mt{color:#1e40af;white-space:pre-wrap;word-break:break-all}
+.rg{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin-top:12px}
+@media(max-width:768px){.rg{grid-template-columns:1fr}}
+.rc{background:var(--c);border-radius:10px;padding:16px;border:1px solid var(--b)}
+.rc.f{grid-column:1/-1}
+.rch{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--b)}
+.rch .ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.rch h4{font-size:13px;font-weight:600}
+.rcb{font-size:13px;line-height:1.6}
+.tg{padding:3px 10px;border-radius:99px;font-size:12px;display:inline-block;margin:2px 3px}
+.br{width:100%;height:5px;background:#e2e8f0;border-radius:99px;margin-top:8px;overflow:hidden}
+.bf{height:100%;border-radius:99px;transition:width .6s ease}
+.in{padding:16px 24px 20px;background:var(--c);border-top:1px solid var(--b);flex-shrink:0}
+.iw{max-width:800px;margin:0 auto;display:flex;gap:10px;align-items:flex-end}
+.iw textarea{flex:1;padding:12px 16px;border:2px solid var(--b);border-radius:10px;font-size:14px;line-height:1.5;resize:none;outline:none;font-family:inherit;min-height:48px;max-height:120px;transition:.2s}
+.iw textarea:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+.sb2{width:44px;height:44px;border-radius:10px;border:none;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:.2s}
+.sb2:hover{opacity:.9;transform:translateY(-1px)}
+.sb2:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.ld{display:flex;gap:4px;padding:8px 0}
+.ld span{width:8px;height:8px;border-radius:50%;background:#94a3b8;animation:bn 1.4s infinite}
+.ld span:nth-child(2){animation-delay:.2s}
+.ld span:nth-child(3){animation-delay:.4s}
+@keyframes bn{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+@media(max-width:640px){.sb{display:none}.hdr .r{display:none}}
 </style>
 </head>
 <body>
-<div class="header">
-<h1>AI 智文助手</h1><span class="badge">v1.1</span>
-<div class="links"><a href="/docs">API 文档</a><a href="#" id="clearBtn">清空记录</a></div>
+<div class="hdr">
+<h1>AI 智文助手</h1><span class="badge">v1.2</span>
+<div class="r"><button onclick="if(confirm('确定清空？')){history=[];localStorage.removeItem('ah');renderH();document.getElementById('ch').innerHTML='<div class=\"wl\"><div class=\"lg\">🔍</div><h2>开始分析文本</h2><p>支持情感分析 · 关键词提取 · 文本摘要 · 自动分类</p></div>';}">清空记录</button></div>
 </div>
 <div class="main">
-<div class="sidebar">
-<div class="sidebar-h">分析记录</div>
-<div class="history-list" id="hList"></div>
+<div class="sb">
+<div class="sb-h">分析记录 <button onclick="newA()">+ 新建</button></div>
+<div class="hl" id="hl"></div>
 </div>
-<div class="content">
-<div class="chat" id="chat">
-<div class="welcome" id="welcome">
-<div class="logo">&#x1F50D;</div>
-<h2>开始分析文本</h2><p>支持情感分析 · 关键词提取 · 文本摘要 · 自动分类</p>
-<div class="examples">
-<span class="ec" data-ex="0">&#x1F60A; 正面</span>
-<span class="ec" data-ex="1">&#x1F61E; 负面</span>
-<span class="ec" data-ex="2">&#x1F4BB; 科技</span>
-<span class="ec" data-ex="3">&#x26BD; 体育</span>
+<div class="ct">
+<div class="ch" id="ch">
+<div class="wl" id="wl">
+<div class="lg">🔍</div>
+<h2>开始分析文本</h2>
+<p>输入任意中文文本，自动分析情感倾向、提取关键词、生成摘要、分类归档</p>
+<div class="ex">
+<span class="ec" onclick="useE(0)">😊 正面</span>
+<span class="ec" onclick="useE(1)">😞 负面</span>
+<span class="ec" onclick="useE(2)">💻 科技</span>
+<span class="ec" onclick="useE(3)">⚽ 体育</span>
 </div>
 </div>
 </div>
-<div class="input-area">
-<div class="input-wrap">
-<textarea id="txt" placeholder="输入文本，按 Enter 发送" rows="1"></textarea>
-<button class="sbtn" id="sbtn">&#x27A4;</button>
+<div class="in">
+<div class="iw">
+<textarea id="tx" placeholder="输入文本，按 Enter 发送" rows="1"></textarea>
+<button class="sb2" id="sbt">➤</button>
 </div>
 </div>
 </div>
 </div>
 <script>
-var EXS=['今天天气真好，心情非常愉快！去公园散步，看到很多漂亮的花。','这个产品太差了，用了两天就坏了，完全不推荐购买。','人工智能正在改变世界，机器学习在医疗、金融等领域广泛应用。','昨晚的足球比赛太精彩了，梅西梅开二度，带领球队逆转取胜。'];
-var history=JSON.parse(localStorage.getItem('ai_hist')||'[]');
-function renderHist(){var el=document.getElementById('hList');if(history.length===0){el.innerHTML='<div class="sidebar-empty">暂无记录<br>输入文本开始分析</div>';return}
-var html='';for(var i=0;i<history.length;i++){var h=history[i];html+='<div class="h-item" data-i="'+i+'"><div class="ht">'+h.t.substring(0,25)+(h.t.length>25?'...':'')+'</div><div class="htime">'+h.ts+'</div></div>';}
-el.innerHTML=html;for(var i=0;i<history.length;i++){(function(idx){el.children[i].onclick=function(){loadHist(idx);};})(i);}}
-function loadHist(i){var h=history[i];var chat=document.getElementById('chat');document.getElementById('welcome').style.display='none';chat.innerHTML='<div class="msg user"><div class="mc"><div class="mt">'+escHtml(h.t)+'</div></div></div>'+buildRes(h.r);}
-function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function buildRes(d){var s=d.sentiment||{};var kw=d.keywords||[];var si={positive:{e:'&#x1F60A;',l:'正面',c:'#16a34a',b:'#f0fdf4'},negative:{e:'&#x1F61E;',l:'负面',c:'#dc2626',b:'#fef2f2'},neutral:{e:'&#x1F610;',l:'中性',c:'#64748b',b:'#f8fafc'}}[s.label]||{e:'&#x1F610;',l:'中性',c:'#64748b',b:'#f8fafc'};
-var cat=d.category?d.category.category||'其他':'其他';var conf=d.category?d.category.confidence:0;
-var kwTags=kw.length?kw.map(function(k){return '<span class="tag" style="background:#eef2ff;color:#4f46e5">'+escHtml(k.word)+'</span>';}).join(''):'<span style="color:#94a3b8">暂无</span>';
-var summ=d.summary?d.summary.summary||'文本较短，无需摘要':'文本较短，无需摘要';
-var summMeta=d.summary?'<div style="font-size:11px;color:var(--text2);margin-top:6px"><span>'+d.summary.original_length+' 字 &rarr; '+d.summary.summary_length+' 字</span></div>':'';
-var html='<div class="msg"><div class="mc"><div class="res-grid">';
-html+='<div class="rc"><div class="rc-h"><div class="ico" style="background:'+si.b+';color:'+si.c+'">'+si.e+'</div><h4>情感分析</h4></div><div class="rc-b"><span style="font-weight:600;color:'+si.c+'">'+si.l+'</span> <span style="font-size:12px;color:var(--text2)">'+(s.score*100).toFixed(1)+'%</span><div class="bar"><div class="bar-f" style="width:'+(s.score*100)+'%;background:'+si.c+'"></div></div></div></div>';
-html+='<div class="rc"><div class="rc-h"><div class="ico" style="background:#eef2ff;color:#4f46e5">&#x1F3F7;</div><h4>关键词</h4></div><div class="rc-b">'+kwTags+'</div></div>';
-html+='<div class="rc full"><div class="rc-h"><div class="ico" style="background:#f0f9ff;color:#0284c7">&#x1F4DD;</div><h4>文本摘要</h4></div><div class="rc-b"><div style="background:#f8fafc;padding:12px;border-radius:8px;border-left:3px solid var(--primary);font-size:13px">'+escHtml(summ)+'</div>'+summMeta+'</div></div>';
-html+='<div class="rc"><div class="rc-h"><div class="ico" style="background:#fdf4ff;color:#a21caf">&#x1F4C2;</div><h4>文本分类</h4></div><div class="rc-b"><span style="display:inline-block;padding:5px 14px;border-radius:99px;font-size:13px;font-weight:600;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);color:#0369a1">'+escHtml(cat)+'</span>'+(conf>0?' <span style="font-size:12px;color:var(--text2)">'+(conf*100).toFixed(0)+'%</span>':'')+'</div></div>';
-html+='</div></div></div>';return html;}
-function saveHist(text,result){var now=new Date();var ts=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');history.unshift({t:text,r:result,ts:ts});if(history.length>50)history=history.slice(0,50);localStorage.setItem('ai_hist',JSON.stringify(history));renderHist();}
-document.querySelectorAll('.ec').forEach(function(el){el.onclick=function(){document.getElementById('txt').value=EXS[parseInt(this.dataset.ex)];analyze();};});
-document.getElementById('txt').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();analyze();}});
-document.getElementById('sbtn').onclick=analyze;
-document.getElementById('clearBtn').onclick=function(){if(confirm('确定清空所有记录？')){history=[];localStorage.removeItem('ai_hist');renderHist();document.getElementById('chat').innerHTML='<div class="welcome" id="welcome"><div class="logo">&#x1F50D;</div><h2>开始分析文本</h2><p>支持情感分析 · 关键词提取 · 文本摘要 · 自动分类</p></div>';}};
-async function analyze(){var t=document.getElementById('txt').value.trim();if(!t)return;
-var btn=document.getElementById('sbtn');btn.disabled=true;
-var chat=document.getElementById('chat');var wel=document.getElementById('welcome');if(wel)wel.style.display='none';
-var um=document.createElement('div');um.className='msg user';um.innerHTML='<div class="mc"><div class="mt">'+escHtml(t)+'</div></div>';chat.appendChild(um);
-var lm=document.createElement('div');lm.className='msg';lm.innerHTML='<div class="mc"><div class="loading"><span></span><span></span><span></span></div></div>';chat.appendChild(lm);chat.scrollTop=chat.scrollHeight;
-try{var r=await fetch('/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,lang:'zh'})});var d=await r.json();lm.remove();chat.insertAdjacentHTML('beforeend',buildRes(d));chat.scrollTop=chat.scrollHeight;saveHist(t,d);document.getElementById('txt').value='';}catch(e){lm.innerHTML='<div class="mc"><div style="color:#dc2626;font-size:13px">请求失败，请重试</div></div>';}
-btn.disabled=false;document.getElementById('txt').focus();}
-renderHist();
+var E=['今天天气真好，阳光明媚，心情非常愉快！','这个产品太差了，用了两天就坏了，完全不推荐。','人工智能正在改变世界，机器学习在医疗、金融等领域广泛应用。','昨晚的足球比赛太精彩了，梅西梅开二度，带领球队逆转取胜。'];
+var history=JSON.parse(localStorage.getItem('ah')||'[]');
+function renderH(){var el=document.getElementById('hl');if(history.length===0){el.innerHTML='<div class="sb-e">暂无记录</div>';return}
+var h='';for(var i=0;i<history.length;i++){h+='<div class="hi" onclick="loadH('+i+')"><div class="ht">'+history[i].t.substring(0,25)+(history[i].t.length>25?'...':'')+'</div><div class="hts">'+history[i].ts+'</div></div>';}
+el.innerHTML=h;}
+function loadH(i){var h=history[i];document.getElementById('wl').style.display='none';var ch=document.getElementById('ch');ch.innerHTML='<div class="msg u"><div class="mc"><div class="mt">'+esc(h.t)+'</div></div></div>'+bR(h.r);ch.scrollTop=ch.scrollHeight;}
+function newA(){document.getElementById('wl').style.display='flex';document.getElementById('ch').innerHTML='<div class="wl" id="wl"><div class="lg">🔍</div><h2>开始分析文本</h2><p>输入任意中文文本，自动分析情感倾向、提取关键词、生成摘要、分类归档</p><div class="ex"><span class="ec" onclick="useE(0)">😊 正面</span><span class="ec" onclick="useE(1)">😞 负面</span><span class="ec" onclick="useE(2)">💻 科技</span><span class="ec" onclick="useE(3)">⚽ 体育</span></div></div>';document.getElementById('tx').focus();}
+function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+function bR(d){var s=d.sentiment||{};var kw=d.keywords||[];var si={p:{e:'😊',l:'正面',c:'#16a34a',b:'#f0fdf4'},n:{e:'😞',l:'负面',c:'#dc2626',b:'#fef2f2'},neu:{e:'😐',l:'中性',c:'#64748b',b:'#f8fafc'}};var x=si[s.label]||si.neu;var cat=d.category?d.category.category||'其他':'其他';var conf=d.category?d.category.confidence:0;
+var kt=kw.length?kw.map(function(k){return '<span class="tg" style="background:#eef2ff;color:#4f46e5">'+esc(k.word)+'</span>';}).join(''):'<span style="color:#94a3b8">暂无</span>';
+var sm=d.summary?esc(d.summary.summary||'文本较短，无需摘要'):'文本较短，无需摘要';
+var sm2=d.summary?'<div style="font-size:11px;color:var(--t2);margin-top:6px"><span>原文 '+d.summary.original_length+' 字 → 摘要 '+d.summary.summary_length+' 字</span></div>':'';
+var h='<div class="msg"><div class="mc"><div class="rg">';
+h+='<div class="rc"><div class="rch"><div class="ic" style="background:'+x.b+';color:'+x.c+'">'+x.e+'</div><h4>情感</h4></div><div class="rcb"><span style="font-weight:600;color:'+x.c+'">'+x.l+'</span> <span style="font-size:12px;color:var(--t2)">'+(s.score*100).toFixed(1)+'%</span><div class="br"><div class="bf" style="width:'+(s.score*100)+'%;background:'+x.c+'"></div></div></div></div>';
+h+='<div class="rc"><div class="rch"><div class="ic" style="background:#eef2ff;color:#4f46e5">🏷</div><h4>关键词</h4></div><div class="rcb">'+kt+'</div></div>';
+h+='<div class="rc f"><div class="rch"><div class="ic" style="background:#f0f9ff;color:#0284c7">📝</div><h4>摘要</h4></div><div class="rcb"><div style="background:#f8fafc;padding:12px;border-radius:8px;border-left:3px solid var(--p);font-size:13px">'+sm+'</div>'+sm2+'</div></div>';
+h+='<div class="rc"><div class="rch"><div class="ic" style="background:#fdf4ff;color:#a21caf">📂</div><h4>分类</h4></div><div class="rcb"><span style="display:inline-block;padding:5px 14px;border-radius:99px;font-size:13px;font-weight:600;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);color:#0369a1">'+esc(cat)+'</span>'+(conf>0?' <span style="font-size:12px;color:var(--t2)">'+(conf*100).toFixed(0)+'%</span>':'')+'</div></div>';
+h+='</div></div></div>';return h;}
+function saveH(text,result){var now=new Date();var ts=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');history.unshift({t:text,r:result,ts:ts});if(history.length>50)history=history.slice(0,50);localStorage.setItem('ah',JSON.stringify(history));renderH();}
+function useE(i){document.getElementById('tx').value=E[i];a();}
+document.getElementById('tx').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();a();}});
+document.getElementById('sbt').onclick=a;
+async function a(){var t=document.getElementById('tx').value.trim();if(!t)return;var btn=document.getElementById('sbt');btn.disabled=true;var ch=document.getElementById('ch');var wl=document.getElementById('wl');if(wl)wl.style.display='none';
+var um=document.createElement('div');um.className='msg u';um.innerHTML='<div class="mc"><div class="mt">'+esc(t)+'</div></div>';ch.appendChild(um);
+var lm=document.createElement('div');lm.className='msg';lm.innerHTML='<div class="mc"><div class="ld"><span></span><span></span><span></span></div></div>';ch.appendChild(lm);ch.scrollTop=ch.scrollHeight;
+try{var r=await fetch('/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t,lang:'zh'})});var d=await r.json();lm.remove();ch.insertAdjacentHTML('beforeend',bR(d));ch.scrollTop=ch.scrollHeight;saveH(t,d);document.getElementById('tx').value='';}catch(e){lm.innerHTML='<div class="mc"><div style="color:#dc2626;font-size:13px">请求失败，请重试</div></div>';}
+btn.disabled=false;document.getElementById('tx').focus();}
+renderH();
 </script>
 </body>
 </html>
