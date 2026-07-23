@@ -63,3 +63,5 @@ ai-text-analyzer/
   requirements.txt
   cloudbase.yaml     # 腾讯云 CloudBase 配置
   .dockerignore
+
+Last deployment trigger: 2026-07-23 14:44:39
